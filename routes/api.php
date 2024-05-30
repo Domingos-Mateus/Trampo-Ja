@@ -13,6 +13,7 @@ use App\Http\Controllers\PerfilsController;
 use App\Http\Controllers\ProfissionaisController;
 use App\Http\Controllers\ProvinciasController;
 use App\Http\Controllers\ServicosController;
+use App\Http\Controllers\VagasController;
 use App\Models\Empreendedores;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -124,6 +125,17 @@ Route::put('/actualizar_parceiro/{id}', [ParceirosController::class, 'update']);
 Route::get('/eliminar_parceiro/{id}', [ParceirosController::class, 'destroy']);
 
 
+
+
+//=====================Rota para vagas==============================
+Route::get('/listar_vagas', [VagasController::class, 'index']);
+Route::post('/registar_vaga', [VagasController::class, 'store']);
+Route::get('/detalhe_vaga/{id}', [VagasController::class, 'show']);
+Route::put('/actualizar_vaga/{id}', [VagasController::class, 'update']);
+Route::get('/eliminar_vaga/{id}', [VagasController::class, 'destroy']);
+
+
+
 //=================Rota do CRUD Currículo=====================
 Route::get('/listar_curriculo', [CurriculosController::class, 'index']);
 Route::post('/registar_listar_curriculo', [CurriculosController::class, 'store']);
@@ -134,7 +146,6 @@ Route::get('/eliminar_listar_curriculo/{id}', [CurriculosController::class, 'des
 
 
 Route::post('logout', [AuthController::class, 'logout']);
-
 
 
 

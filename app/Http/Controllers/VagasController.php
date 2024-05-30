@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empresas;
 use App\Models\Vagas;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class VagasController extends Controller
 {
@@ -15,7 +17,22 @@ class VagasController extends Controller
     public function index()
     {
         //
+        $query = DB::table('vagas')
+            ->select(
+                'vagas.*'
+            );
+        $vagas = $query->inRandomOrder()->get();
+        $dadosPersonalizados = [];
 
+        foreach ($vagas as $vaga) {
+            $dadosPersonalizados[] = [
+                'id' => $vaga->id,
+                'profissional_id' => $vaga->profissional_id,
+                'empresa_id' => $vaga->empresa_id,
+
+            ];
+        }
+        return response()->json($dadosPersonalizados);
     }
 
     /**
@@ -37,6 +54,22 @@ class VagasController extends Controller
     public function store(Request $request)
     {
         //
+        $empresaExistente = Empresas::find($request->empresa_id);
+
+        if(!$empresaExistente) {
+            return response()->json(['message' => 'A empresa com o ID fornecido não existe.'], 404);
+        }
+        $profissionalExistente = Empresas::find($request->empresa_id);
+
+        if(!$profissionalExistente) {
+            return response()->json(['message' => 'O profissional com o ID fornecido não existe.'], 404);
+        }
+        $vagas = new Vagas;
+
+        $vagas->empresa_id = $request->empresa_id;
+        $vagas->profissional_id = $request->profissional_id;
+        $vagas->save();
+        return response()->json(['message' => 'Vagas cadastrada com sucesso!'], 200);
     }
 
     /**
@@ -45,9 +78,15 @@ class VagasController extends Controller
      * @param  \App\Models\Vagas  $vagas
      * @return \Illuminate\Http\Response
      */
-    public function show(Vagas $vagas)
+    public function show($id)
     {
         //
+        $vaga = Vagas::find($id);
+        if (!$vaga) {
+            return response(['message' => 'Vaga não encontrada'], 404);
+        }
+
+        return response()->json($vaga, 200);
     }
 
     /**
@@ -68,9 +107,24 @@ class VagasController extends Controller
      * @param  \App\Models\Vagas  $vagas
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Vagas $vagas)
+    public function update(Request $request, $id)
     {
         //
+        $vagas = Vagas::find($id);
+
+        if (!$vagas) {
+            return response(['message' => 'Vagas não encontrado'], 404);
+        }
+
+
+        // Se o nome não estiver sendo usado por outro serviço, continua com a atualização
+        $vagas->empresa_id = $request->empresa_id;
+        $vagas->profissional_id = $request->profissional_id;
+
+        $vagas->save();
+
+        return response()->json(['message' => 'Vaga Atualizado com sucesso!'], 200);
+
     }
 
     /**
@@ -79,8 +133,22 @@ class VagasController extends Controller
      * @param  \App\Models\Vagas  $vagas
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Vagas $vagas)
+    public function destroy($id)
     {
         //
+        $vaga = Vagas::find($id);
+
+        if (!$vaga) {
+            return response()->json(['message' => 'Vaga não encontrada.'], 404);
+        }
+
+        try {
+            // Tenta excluir o registro
+            $vaga->delete();
+            return response()->json(['message' => 'Vaga Eliminada com sucesso!'], 200);
+        } catch (\Exception $e) {
+            // Se ocorrer um erro ao excluir devido a restrições de chave estrangeira
+            return response()->json(['message' => 'Não é possível excluir a vaga. Está sendo usada em outra tabela.'], 500);
+        }
     }
 }
