@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\BairrosController;
+use App\Http\Controllers\CandidatosController;
 use App\Http\Controllers\CidadesController;
 use App\Http\Controllers\CurriculosController;
 use App\Http\Controllers\EmpreendedoresController;
@@ -10,7 +11,6 @@ use App\Http\Controllers\FucoesController;
 use App\Http\Controllers\ImagensServicosController;
 use App\Http\Controllers\ParceirosController;
 use App\Http\Controllers\PerfilsController;
-use App\Http\Controllers\ProfissionaisController;
 use App\Http\Controllers\ProvinciasController;
 use App\Http\Controllers\ServicosController;
 use App\Http\Controllers\VagasController;
@@ -59,13 +59,13 @@ Route::put('/actualizar_servico/{id}', [servicosController::class, 'update']);
 Route::get('/eliminar_servico/{id}', [servicosController::class, 'destroy']);
 
 
-//=================Rota do CRUD Profissionais=====================
-Route::get('/listar_profissionais', [ProfissionaisController::class, 'index']);
-Route::post('/registar_profissional', [profissionaisController::class, 'store']);
-Route::post('/carregar_imagem_profissional/{id}', [profissionaisController::class, 'uploadFotoPerfil']);
-Route::get('/detalhar_profissional/{id}', [profissionaisController::class, 'show']);
-Route::put('/actualizar_profissional/{id}', [profissionaisController::class, 'update']);
-Route::get('/eliminar_profissional/{id}', [profissionaisController::class, 'destroy']);
+//=================Rota do CRUD Candidatos=====================
+Route::get('/listar_candidatos', [CandidatosController::class, 'index']);
+Route::post('/registar_candidato', [CandidatosController::class, 'store']);
+Route::post('/carregar_imagem_candidato/{id}', [CandidatosController::class, 'uploadFotoPerfil']);
+Route::get('/detalhar_candidato/{id}', [CandidatosController::class, 'show']);
+Route::put('/actualizar_candidato/{id}', [CandidatosController::class, 'update']);
+Route::get('/eliminar_candidato/{id}', [CandidatosController::class, 'destroy']);
 
 
 //=================Rota do CRUD Funções=====================

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProfissionaisTable extends Migration
+class CreateCandidatosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,15 @@ class CreateProfissionaisTable extends Migration
      */
     public function up()
     {
-        Schema::create('profissionais', function (Blueprint $table) {
+        Schema::create('candidatos', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nome');
-            $table->integer('servico_id')->nullable();
-            $table->integer('provincia_id')->nullable();
-            $table->integer('cidade_id')->nullable();
-            $table->integer('bairro_id')->nullable();
+            $table->string('email')->unique();
+            $table->string('senha');
             $table->string('foto_perfil')->nullable();
             $table->string('telefone')->nullable();
-            $table->integer('usuario_id')->nullable();
             $table->integer('status')->default(1);
+            $table->string('video_apresentacao')->nullable();
             $table->timestamps();
         });
     }
@@ -35,6 +33,6 @@ class CreateProfissionaisTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('profissionais');
+        Schema::dropIfExists('candidatos');
     }
 }

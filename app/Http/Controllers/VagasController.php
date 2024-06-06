@@ -15,25 +15,35 @@ class VagasController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        //
-        $query = DB::table('vagas')
+{
+    $query = DB::table('vagas')
+            ->join('empresas', 'empresas.id', '=', 'vagas.empresa_id')
             ->select(
-                'vagas.*'
-            );
-        $vagas = $query->inRandomOrder()->get();
+                'vagas.*',
+                'empresas.nome as nome_empresa'
+            )
+            ->orderBy('vagas.titulo');
+
+        $vagas = $query->get();
         $dadosPersonalizados = [];
 
         foreach ($vagas as $vaga) {
             $dadosPersonalizados[] = [
                 'id' => $vaga->id,
-                'profissional_id' => $vaga->profissional_id,
                 'empresa_id' => $vaga->empresa_id,
-
+                'nome_empresa' => $vaga->nome_empresa,
+                'titulo' => $vaga->titulo,
+                'descricao' => $vaga->descricao,
+                'requisitos' => $vaga->requisitos,
+                'salario' => $vaga->salario,
+                'localizacao' => $vaga->localizacao,
+                'dias_disponiveis' => $vaga->dias_disponiveis,
+                'data_expiracao' => $vaga->data_expiracao,
             ];
         }
         return response()->json($dadosPersonalizados);
-    }
+}
+
 
     /**
      * Show the form for creating a new resource.
@@ -56,20 +66,21 @@ class VagasController extends Controller
         //
         $empresaExistente = Empresas::find($request->empresa_id);
 
-        if(!$empresaExistente) {
+        if (!$empresaExistente) {
             return response()->json(['message' => 'A empresa com o ID fornecido não existe.'], 404);
         }
-        $profissionalExistente = Empresas::find($request->empresa_id);
 
-        if(!$profissionalExistente) {
-            return response()->json(['message' => 'O profissional com o ID fornecido não existe.'], 404);
-        }
-        $vagas = new Vagas;
+        $vaga = new Vagas;
+        $vaga->empresa_id = $request->empresa_id;
+        $vaga->titulo = $request->titulo;
+        $vaga->descricao = $request->descricao;
+        $vaga->requisitos = $request->requisitos;
+        $vaga->salario = $request->salario;
+        $vaga->localizacao = $request->localizacao;
+        $vaga->dias_disponiveis = $request->dias_disponiveis;
+        $vaga->save();
 
-        $vagas->empresa_id = $request->empresa_id;
-        $vagas->profissional_id = $request->profissional_id;
-        $vagas->save();
-        return response()->json(['message' => 'Vagas cadastrada com sucesso!'], 200);
+        return response()->json(['message' => 'Vaga cadastrada com sucesso!'], 200);
     }
 
     /**
@@ -110,21 +121,21 @@ class VagasController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $vagas = Vagas::find($id);
-
-        if (!$vagas) {
-            return response(['message' => 'Vagas não encontrado'], 404);
+        $vaga = Vagas::find($id);
+        if (!$vaga) {
+            return response()->json(['message' => 'Vaga não encontrada'], 404);
         }
 
+        $vaga->empresa_id = $request->empresa_id;
+        $vaga->titulo = $request->titulo;
+        $vaga->descricao = $request->descricao;
+        $vaga->requisitos = $request->requisitos;
+        $vaga->salario = $request->salario;
+        $vaga->localizacao = $request->localizacao;
+        $vaga->dias_disponiveis = $request->dias_disponiveis;
+        $vaga->save();
 
-        // Se o nome não estiver sendo usado por outro serviço, continua com a atualização
-        $vagas->empresa_id = $request->empresa_id;
-        $vagas->profissional_id = $request->profissional_id;
-
-        $vagas->save();
-
-        return response()->json(['message' => 'Vaga Atualizado com sucesso!'], 200);
-
+        return response()->json(['message' => 'Vaga atualizada com sucesso!'], 200);
     }
 
     /**
