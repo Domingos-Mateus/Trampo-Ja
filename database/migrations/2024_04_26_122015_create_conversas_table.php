@@ -15,7 +15,7 @@ class CreateConversasTable extends Migration
     {
         Schema::create('conversas', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('profissional_id');
+            $table->integer('candidatos_id');
             $table->integer('empreendedor_id');
             $table->timestamps();
         });

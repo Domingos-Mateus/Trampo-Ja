@@ -32,7 +32,7 @@ class CreateCurriculosTable extends Migration
             $table->integer('total_views')->default(0);
             $table->string('formacao_academica')->nullable();
             $table->string('anos_experiencia_profissional')->nullable();
-            $table->integer('profissional_id')->unsigned();
+            $table->integer('candidatos_id')->unsigned();
             $table->boolean('permitir_foto')->default(1);
             $table->boolean('permitir_faixa_etaria')->default(1);
             $table->boolean('permitir_escolaridade')->default(1);
@@ -40,8 +40,7 @@ class CreateCurriculosTable extends Migration
             $table->integer('status')->defalt(1);
 
 
-            $table->foreign('profissional_id')->references('id')->on('profissionais')->onDelete('cascade');
-            $table->timestamps();
+            $table->foreign('candidatos_id')->references('id')->on('candidatos');            $table->timestamps();
         });
     }
 

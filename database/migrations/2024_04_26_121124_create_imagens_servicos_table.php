@@ -17,10 +17,10 @@ class CreateImagensServicosTable extends Migration
             $table->increments('id');
             $table->string('descricao');
             $table->string('imagem');
-            $table->integer('profissional_id')->unsigned();
+            $table->integer('candidatos_id')->unsigned();
             $table->integer('servico_id')->unsigned();
 
-            $table->foreign('profissional_id')->references('id')->on('profissionais');
+            $table->foreign('candidatos_id')->references('id')->on('candidatos');
             $table->foreign('servico_id')->references('id')->on('servicos');
             $table->timestamps();
         });

@@ -15,11 +15,11 @@ class CreateCadastrosTable extends Migration
     {
         Schema::create('cadastros', function (Blueprint $table) {
             $table->id();
-            $table->integer('profissional_id')->unsigned();
+            $table->integer('candidato_id')->unsigned();
             $table->integer('servico_id')->unsigned();
             $table->timestamps();
 
-            $table->foreign('profissional_id')->references('id')->on('profissionais')->onDelete('cascade');
+            $table->foreign('candidato_id')->references('id')->on('candidatos');
             $table->foreign('servico_id')->references('id')->on('servicos')->onDelete('cascade');
         });
     }
